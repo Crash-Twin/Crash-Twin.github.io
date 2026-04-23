@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>CrashTwin | A Physics-Grounded Benchmark for Multi-Agent Dynamics in World Models</title>
+  <meta name="title" content="CrashTwin | A Physics-Grounded Benchmark for Multi-Agent Dynamics in World Models">
+  <meta name="description" content="CrashTwin is a physics-grounded benchmark for evaluating multi-agent collision dynamics in generative world models through calibration-free reconstruction and diagnostic metrics.">
+  <meta name="keywords" content="CrashTwin, world models, autonomous driving, video generation, physical evaluation, collision dynamics, benchmark">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#2563eb">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="CrashTwin">
+  <meta property="og:description" content="A physics-grounded benchmark for multi-agent dynamics in world models.">
+  <meta property="og:image" content="static/images/teaserv5.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CrashTwin">
+  <meta name="twitter:description" content="A physics-grounded benchmark for multi-agent dynamics in world models.">
+  <meta name="twitter:image" content="static/images/teaserv5.png">
+
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+</head>
+
+<body>
+  <nav class="navbar project-navbar" role="navigation" aria-label="main navigation">
+    <div class="container is-max-widescreen">
+      <div class="navbar-brand">
+        <a class="navbar-item project-brand" href="#top">CrashTwin</a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="projectNav">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="projectNav" class="navbar-menu">
+        <div class="navbar-end">
+          <a class="navbar-item" href="#abstract">Abstract</a>
+          <a class="navbar-item" href="#framework">Pipeline</a>
+          <a class="navbar-item" href="#metrics">Metrics</a>
+          <a class="navbar-item" href="#results">Results</a>
+          <a class="navbar-item" href="#videos">Videos</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top">
+    <section class="hero project-hero">
+      <div class="hero-body">
+        <div class="container is-max-desktop has-text-centered">
+          <h1 class="title publication-title">
+            CrashTwin: A Physics-Grounded Benchmark for Multi-Agent Dynamics in World Models
+          </h1>
+
+          <div class="publication-authors">
+            <p>
+              <span>Nuo Chen<sup>1*</sup></span>,
+              <span>Lulin Liu<sup>1,2*</sup></span>,
+              <span>Zihao Li<sup>1</sup></span>,
+              <span>Ziyao Zeng<sup>3</sup></span>,
+              <span>Zihao Zhu<sup>1</sup></span>,
+              <span>Wenyan Cong<sup>4</sup></span>,
+              <span>Junyuan Hong<sup>4</sup></span>,
+              <span>Yunhao Yang<sup>4</sup></span>,
+              <span>Zhengzhong Tu<sup>1</sup></span>,
+              <span>Yan Wang<sup>5</sup></span>,
+              <span>Boris Ivanovic<sup>5</sup></span>,
+              <span>Marco Pavone<sup>5,6</sup></span>,
+              <span>Zhangyang Wang<sup>4</sup></span>,
+              <span>Yang Zhou<sup>1</sup></span>,
+              <span>Zhiwen Fan<sup>1</sup></span>
+            </p>
+          </div>
+
+          <div class="publication-affiliations">
+            <p>
+              <span><sup>1</sup>Texas A&amp;M University</span>
+              <span><sup>2</sup>University of Minnesota</span>
+              <span><sup>3</sup>Yale University</span>
+              <span><sup>4</sup>University of Texas at Austin</span>
+              <span><sup>5</sup>NVIDIA</span>
+              <span><sup>6</sup>Stanford University</span>
+            </p>
+            <p class="author-note"><sup>*</sup>Equal contribution</p>
+          </div>
+
+          <div class="publication-links">
+            <a href="" class="button publication-link-button publication-link-primary is-rounded">
+              <span class="icon"><i class="fas fa-file-alt"></i></span>
+              <span>Paper</span>
+            </a>
+            <a href="" class="button publication-link-button publication-link-primary is-rounded">
+              <span class="icon"><i class="fab fa-github"></i></span>
+              <span>Code (coming soon)</span>
+            </a>
+            <a href="https://huggingface.co/datasets/nnuochen/crashtwin_data" target="_blank" rel="noopener noreferrer" class="button publication-link-button publication-link-primary is-rounded">
+              <span class="icon hf-icon" aria-hidden="true">&#129303;</span>
+              <span>Data</span>
+            </a>
+            <a href="#videos" class="button publication-link-button publication-link-primary is-rounded">
+              <span class="icon"><i class="fas fa-film"></i></span>
+              <span>Gallery</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="main-video" class="section teaser-section">
+      <div class="container is-max-desktop">
+        <video class="teaser-video" poster="static/images/teaserv5.png" autoplay muted loop controls playsinline preload="metadata">
+          <!-- Temporary source for the final main project video. -->
+          <source src="static/videos/crashtwin_story_v16_zoomout_loop2_ending.mp4" type="video/mp4">
+        </video>
+      </div>
+    </section>
+
+    <section id="abstract" class="section section-band">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">Abstract</h2>
+        <div class="content project-copy">
+          <p>
+            Generative world models hold immense promise as scalable simulators for autonomous systems, particularly for synthesizing rare but safety-critical multi-agent interactions, such as vehicle collisions. However, current evaluation paradigms index heavily on visual fidelity and semantic alignment, leaving a critical blind spot: they cannot reliably quantify whether generated dynamics actually obey the fundamental physical laws required for reliable simulation. Assessing this physical plausibility is inherently difficult due to a lack of grounded metrics and the challenge of extracting metric-scale kinematics from uncalibrated video rollouts. To bridge this gap, we introduce <strong>CrashTwin</strong>, a physics-grounded evaluation framework designed to stress-test the physical trustworthiness of world models. CrashTwin couples a diverse dataset of 25K controllable synthetic and 12K in-the-wild collision sequences with a novel calibration-free reconstruction pipeline, enabling the recovery of 3D physical attributes directly from monocular generations. We propose a diagnostic suite that systematically evaluates three dimensions: spatio-temporal consistency, momentum and kinetic energy conservation, and world-dynamics integrity. Extensive benchmarking of state-of-the-art models reveals a crucial insight: high perceptual quality frequently masks severe physical violations during complex interactions. By quantitatively exposing these failure modes, CrashTwin provides a vital diagnostic tool for developing physically grounded world models capable of reliable real-world simulation.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="failures" class="section">
+      <div class="container is-max-desktop has-text-centered">
+        <h2 class="title is-3">Physical Failure Modes</h2>
+        <p class="section-lede">
+          Representative spatio-temporal, momentum and energy, and world-dynamics violations observed across recent world models.
+        </p>
+        <figure class="figure-block">
+          <img loading="lazy" decoding="async" src="static/images/teaserv5.png" alt="Representative physical violations across world models">
+        </figure>
+      </div>
+    </section>
+
+    <section id="framework" class="section section-band">
+      <div class="container is-max-desktop has-text-centered">
+        <h2 class="title is-3">CrashTwin Pipeline</h2>
+        <p class="section-lede">
+          CrashTwin connects scenario design, monocular reconstruction, global dynamic recovery, and physics-grounded evaluation.
+        </p>
+        <figure class="figure-block is-wide">
+          <img loading="lazy" decoding="async" src="static/images/overallv7.png" alt="CrashTwin framework overview">
+        </figure>
+      </div>
+    </section>
+
+    <section id="dataset" class="section">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">CrashTwin Dataset</h2>
+        <div class="dataset-grid">
+          <div class="dataset-stat">
+            <span class="stat-value">25.6K</span>
+            <span class="stat-label">controllable synthetic crashes</span>
+          </div>
+          <div class="dataset-stat">
+            <span class="stat-value">12.6K</span>
+            <span class="stat-label">in-the-wild accidents</span>
+          </div>
+          <div class="dataset-stat">
+            <span class="stat-value">3</span>
+            <span class="stat-label">diagnostic metric families</span>
+          </div>
+          <div class="dataset-stat">
+            <span class="stat-value">7</span>
+            <span class="stat-label">representative collision topologies</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="metrics" class="section section-band">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">Physics-Grounded Metrics</h2>
+        <div class="columns metric-columns">
+          <div class="column">
+            <div class="metric-panel">
+              <h3 class="title is-5">
+                <span class="icon"><i class="fas fa-wave-square"></i></span>
+                Spatio-Temporal Consistency
+              </h3>
+              <p><strong>E<sub>warp</sub></strong> measures flow warping error for temporal coherence.</p>
+              <p><strong>E<sub>div</sub></strong> measures normalized flow divergence for near-rigid motion.</p>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="metric-panel">
+              <h3 class="title is-5">
+                <span class="icon"><i class="fas fa-balance-scale"></i></span>
+                Momentum &amp; Energy Conservation
+              </h3>
+              <p><strong>J<sub>p</sub></strong> captures linear momentum residual.</p>
+              <p><strong>J<sub>H</sub></strong> captures angular momentum residual.</p>
+              <p><strong>J<sub>E</sub></strong> penalizes kinetic energy gain.</p>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="metric-panel">
+              <h3 class="title is-5">
+                <span class="icon"><i class="fas fa-cubes"></i></span>
+                World-Dynamics Integrity
+              </h3>
+              <p><strong>S<sub>ID</sub></strong> measures instance identity stability.</p>
+              <p><strong>D<sub>ad</sub></strong> measures appearance-drift distance.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reconstruction" class="section">
+      <div class="container is-max-desktop has-text-centered">
+        <h2 class="title is-3">Global Dynamic Reconstruction</h2>
+        <p class="section-lede">
+          A calibration-free pipeline converts fragmented monocular tracks into globally consistent, metric-scale collision dynamics.
+        </p>
+        <figure class="figure-block">
+          <img loading="lazy" decoding="async" src="static/images/eval_pipeline_finalv1.jpg" alt="End-to-end evaluation pipeline from uncalibrated video to global dynamic reconstruction and physics metrics">
+        </figure>
+        <figure class="figure-block">
+          <img loading="lazy" decoding="async" src="static/images/supp_eval_pipev2.png" alt="Track refinement with relinking, depth correction, ego-motion compensation, and Kalman filtering">
+        </figure>
+      </div>
+    </section>
+
+    <section id="results" class="section section-band">
+      <div class="container is-max-widescreen">
+        <div class="has-text-centered">
+          <h2 class="title is-3">Metric-Human Alignment &amp; Model Comparison</h2>
+          <p class="section-lede">
+            Physical metrics align with human judgments and expose substantial physical inconsistency across current world models.
+          </p>
+        </div>
+
+        <figure class="figure-block result-figure">
+          <img loading="lazy" decoding="async" src="static/images/teaserv4_1.png" alt="Metric-human alignment and physics-based model comparison">
+        </figure>
+
+        <div class="table-section">
+          <h3 class="title is-5">Benchmark Evaluation Leaderboard</h3>
+          <p class="table-note">Lower is better unless marked with an upward arrow.</p>
+          <div class="table-scroll">
+            <table class="table is-fullwidth results-table">
+              <thead>
+                <tr>
+                  <th rowspan="2">Models</th>
+                  <th colspan="2">Spatio-temporal Consistency</th>
+                  <th colspan="3">Momentum &amp; Energy Conservation</th>
+                  <th colspan="2">World-dynamics Integrity</th>
+                </tr>
+                <tr>
+                  <th>E<sub>warp</sub> &darr;</th>
+                  <th>E<sub>div</sub> &darr;</th>
+                  <th>J<sub>p</sub> &darr;</th>
+                  <th>J<sub>H</sub> &darr;</th>
+                  <th>J<sub>E</sub> &darr;</th>
+                  <th>S<sub>ID</sub> &uarr;</th>
+                  <th>D<sub>ad</sub> &darr;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="table-group"><td colspan="8">Open-Source Models</td></tr>
+                <tr>
+                  <td>SkyReel-1.3B</td>
+                  <td>0.0227</td>
+                  <td>0.6103</td>
+                  <td>0.9566</td>
+                  <td>0.9628</td>
+                  <td>0.9457</td>
+                  <td>0.6660</td>
+                  <td>0.3592</td>
+                </tr>
+                <tr>
+                  <td>Wan 2.1-14B</td>
+                  <td>0.0179</td>
+                  <td>0.6320</td>
+                  <td>0.8235</td>
+                  <td>0.8494</td>
+                  <td>0.7864</td>
+                  <td>0.6760</td>
+                  <td>0.3117</td>
+                </tr>
+                <tr>
+                  <td>Wan 2.2-5B</td>
+                  <td>0.0145</td>
+                  <td><strong>0.5959</strong></td>
+                  <td>0.8899</td>
+                  <td>0.8975</td>
+                  <td>0.8649</td>
+                  <td><strong>0.7254</strong></td>
+                  <td><strong>0.3109</strong></td>
+                </tr>
+                <tr>
+                  <td>Cosmos-Predict2-2B</td>
+                  <td>0.0240</td>
+                  <td>0.6748</td>
+                  <td>0.8890</td>
+                  <td>0.8954</td>
+                  <td>0.8590</td>
+                  <td>0.6129</td>
+                  <td>0.3462</td>
+                </tr>
+                <tr>
+                  <td>Cosmos-Predict2-14B</td>
+                  <td><strong>0.0117</strong></td>
+                  <td>0.7180</td>
+                  <td><strong>0.6828</strong></td>
+                  <td><strong>0.7629</strong></td>
+                  <td><strong>0.6047</strong></td>
+                  <td>0.6737</td>
+                  <td>0.3327</td>
+                </tr>
+                <tr class="table-group"><td colspan="8">Proprietary Models</td></tr>
+                <tr>
+                  <td>Google Veo 3.1</td>
+                  <td><strong>0.0097</strong></td>
+                  <td>0.6202</td>
+                  <td>0.7743</td>
+                  <td>0.8011</td>
+                  <td>0.7460</td>
+                  <td><strong>0.7232</strong></td>
+                  <td>0.3075</td>
+                </tr>
+                <tr>
+                  <td>Hailuo 2.3</td>
+                  <td>0.0151</td>
+                  <td>0.6143</td>
+                  <td><strong>0.7664</strong></td>
+                  <td><strong>0.7812</strong></td>
+                  <td>0.7285</td>
+                  <td>0.6203</td>
+                  <td><strong>0.2968</strong></td>
+                </tr>
+                <tr>
+                  <td>Seedance V1 Pro</td>
+                  <td>0.0166</td>
+                  <td><strong>0.6130</strong></td>
+                  <td>0.7725</td>
+                  <td>0.7837</td>
+                  <td><strong>0.7209</strong></td>
+                  <td>0.6007</td>
+                  <td>0.3002</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="table-section">
+          <h3 class="title is-5">Effect of Post-Training</h3>
+          <p class="table-note">Physics-oriented post-training improves all diagnostic metric families on Cosmos-Predict2-2B.</p>
+          <div class="table-scroll">
+            <table class="table is-fullwidth results-table">
+              <thead>
+                <tr>
+                  <th>Model Variant</th>
+                  <th>E<sub>warp</sub> &darr;</th>
+                  <th>E<sub>div</sub> &darr;</th>
+                  <th>J<sub>p</sub> &darr;</th>
+                  <th>J<sub>H</sub> &darr;</th>
+                  <th>J<sub>E</sub> &darr;</th>
+                  <th>S<sub>ID</sub> &uarr;</th>
+                  <th>D<sub>ad</sub> &darr;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Base (w/o post-training)</td>
+                  <td>0.0240</td>
+                  <td>0.6748</td>
+                  <td>0.8890</td>
+                  <td>0.8954</td>
+                  <td>0.8590</td>
+                  <td>0.6129</td>
+                  <td>0.3462</td>
+                </tr>
+                <tr>
+                  <td>Base (w/ post-training)</td>
+                  <td><strong>0.0085</strong></td>
+                  <td><strong>0.6279</strong></td>
+                  <td><strong>0.6479</strong></td>
+                  <td><strong>0.7296</strong></td>
+                  <td><strong>0.5534</strong></td>
+                  <td><strong>0.7746</strong></td>
+                  <td><strong>0.2953</strong></td>
+                </tr>
+                <tr>
+                  <td><em>Ground Truth</em></td>
+                  <td>0.0075</td>
+                  <td>0.6549</td>
+                  <td>0.3089</td>
+                  <td>0.4620</td>
+                  <td>0.2502</td>
+                  <td>0.8010</td>
+                  <td>0.2819</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="videos" class="section">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered">Video Gallery</h2>
+
+        <h3 class="title is-5 gallery-title">Physical Violation Clips</h3>
+        <div class="video-grid two-up">
+          <article class="video-card">
+            <video autoplay muted loop controls preload="metadata" playsinline>
+              <source src="static/videos/violations/rigid_distortion_cosmos14b.mp4" type="video/mp4">
+            </video>
+            <p>Rigid distortion <span>Cosmos-Predict2-14B</span></p>
+          </article>
+          <article class="video-card">
+            <video autoplay muted loop controls preload="metadata" playsinline>
+              <source src="static/videos/violations/temporal_warping_skyreel13b.mp4" type="video/mp4">
+            </video>
+            <p>Temporal warping <span>SkyReel-1.3B</span></p>
+          </article>
+        </div>
+
+        <div class="video-grid three-up">
+          <article class="video-card">
+            <video autoplay muted loop controls preload="metadata" playsinline>
+              <source src="static/videos/violations/momentum_imbalance_hailuo23.mp4" type="video/mp4">
+            </video>
+            <p>Momentum imbalance <span>Hailuo 2.3</span></p>
+          </article>
+          <article class="video-card">
+            <video autoplay muted loop controls preload="metadata" playsinline>
+              <source src="static/videos/violations/angular_inconsistency_seeddance.mp4" type="video/mp4">
+            </video>
+            <p>Angular inconsistency <span>Seedance V1 Pro</span></p>
+          </article>
+          <article class="video-card">
+            <video autoplay muted loop controls preload="metadata" playsinline>
+              <source src="static/videos/violations/energy_increase_veo31.mp4" type="video/mp4">
+            </video>
+            <p>Energy increase <span>Google Veo 3.1</span></p>
+          </article>
+        </div>
+
+        <div class="video-grid two-up">
+          <article class="video-card">
+            <video autoplay muted loop controls preload="metadata" playsinline>
+              <source src="static/videos/violations/appearance_drift_wan21_14b.mp4" type="video/mp4">
+            </video>
+            <p>Appearance drift <span>Wan 2.1-14B</span></p>
+          </article>
+          <article class="video-card">
+            <video autoplay muted loop controls preload="metadata" playsinline>
+              <source src="static/videos/violations/identity_merge_cosmos2b.mp4" type="video/mp4">
+            </video>
+            <p>Identity merge <span>Cosmos-Predict2-2B</span></p>
+          </article>
+        </div>
+
+        <h3 class="title is-5 gallery-title">Global Dynamic Reconstruction Results</h3>
+        <div class="video-grid three-up">
+          <article class="video-card">
+            <video autoplay muted loop controls preload="metadata" playsinline>
+              <source src="static/videos/reconstruction/VV_7156_myoutput.mp4" type="video/mp4">
+            </video>
+            <p>Reconstruction Case 1</p>
+          </article>
+          <article class="video-card">
+            <video autoplay muted loop controls preload="metadata" playsinline>
+              <source src="static/videos/reconstruction/VV_7233_myoutput.mp4" type="video/mp4">
+            </video>
+            <p>Reconstruction Case 2</p>
+          </article>
+          <article class="video-card">
+            <video autoplay muted loop controls preload="metadata" playsinline>
+              <source src="static/videos/reconstruction/VV_804_myoutput.mp4" type="video/mp4">
+            </video>
+            <p>Reconstruction Case 3</p>
+          </article>
+        </div>
+
+        <h3 class="title is-5 gallery-title">Cosmos-Predict2-2B Post-Training</h3>
+        <div class="comparison-set">
+          <h4>Scene 1</h4>
+          <div class="video-grid three-up">
+            <article class="video-card">
+              <video autoplay muted loop controls preload="metadata" playsinline>
+                <source src="static/videos/posttraining/scene1_gt.mp4" type="video/mp4">
+              </video>
+              <p>Ground truth</p>
+            </article>
+            <article class="video-card">
+              <video autoplay muted loop controls preload="metadata" playsinline>
+                <source src="static/videos/posttraining/scene1_base_cosmos2b.mp4" type="video/mp4">
+              </video>
+              <p>Baseline</p>
+            </article>
+            <article class="video-card">
+              <video autoplay muted loop controls preload="metadata" playsinline>
+                <source src="static/videos/posttraining/scene1_posttrained_cosmos2b.mp4" type="video/mp4">
+              </video>
+              <p>Post-trained</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="comparison-set">
+          <h4>Scene 2</h4>
+          <div class="video-grid three-up">
+            <article class="video-card">
+              <video autoplay muted loop controls preload="metadata" playsinline>
+                <source src="static/videos/posttraining/scene2_gt.mp4" type="video/mp4">
+              </video>
+              <p>Ground truth</p>
+            </article>
+            <article class="video-card">
+              <video autoplay muted loop controls preload="metadata" playsinline>
+                <source src="static/videos/posttraining/scene2_base_cosmos2b.mp4" type="video/mp4">
+              </video>
+              <p>Baseline</p>
+            </article>
+            <article class="video-card">
+              <video autoplay muted loop controls preload="metadata" playsinline>
+                <source src="static/videos/posttraining/scene2_posttrained_cosmos2b.mp4" type="video/mp4">
+              </video>
+              <p>Post-trained</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="comparison-set">
+          <h4>Scene 3</h4>
+          <div class="video-grid three-up">
+            <article class="video-card">
+              <video autoplay muted loop controls preload="metadata" playsinline>
+                <source src="static/videos/posttraining/scene3_gt.mp4" type="video/mp4">
+              </video>
+              <p>Ground truth</p>
+            </article>
+            <article class="video-card">
+              <video autoplay muted loop controls preload="metadata" playsinline>
+                <source src="static/videos/posttraining/scene3_base_cosmos2b.mp4" type="video/mp4">
+              </video>
+              <p>Baseline</p>
+            </article>
+            <article class="video-card">
+              <video autoplay muted loop controls preload="metadata" playsinline>
+                <source src="static/videos/posttraining/scene3_posttrained_cosmos2b.mp4" type="video/mp4">
+              </video>
+              <p>Post-trained</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container is-max-desktop">
+      <div class="content has-text-centered">
+        <p><strong>CrashTwin</strong>: A Physics-Grounded Benchmark for Multi-Agent Dynamics in World Models.</p>
+        <p>
+          This page uses the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>.
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
