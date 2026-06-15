@@ -370,9 +370,17 @@ video {
   padding: 1.3rem;
 }
 
+.leaderboard-section {
+  margin-top: 0;
+}
+
 .table-note {
   color: var(--muted);
   margin-bottom: 1rem;
+}
+
+.metric-alignment-block {
+  margin-top: 2rem;
 }
 
 .table-scroll {
